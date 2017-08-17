@@ -21,8 +21,8 @@ Value | Condition
 --- | ---
 object | any type derived from object
 otherObject | any type derived from object; same type as `object`
-bindingFlags | OPTIONAL.<br/>Refer to [BindingFlags](https://msdn.microsoft.com/en-us/library/system.reflection.bindingflags(v=vs.110).aspx) documentation. Applies when comparing classes.<br />Default is BindingFlags.Public | BindingFlags.Instance
-comparerFlags | OPTIONAL.<br />`ValueTypeComparerFactory.ComparerFlags.IgnoreId` - comparer will not look at properties named ID, Id or id.<br />`ValueTypeComparerFactory.ComparerFlags.IgnoreKeyAttributeProperties` - comparer will not look at properties with a `[Key]` attribute.<br />Applies when comparing classes. Default is `ValueTypeComparerFactory.ComparerFlags.None`.
+bindingFlags | OPTIONAL.<br/>Refer to [BindingFlags](https://msdn.microsoft.com/en-us/library/system.reflection.bindingflags(v=vs.110).aspx) documentation. Applies when comparing classes.<br />Default is `BindingFlags.Public &#124; BindingFlags.Instance`
+comparerFlags | OPTIONAL.<br />`ValueTypeComparerFactory.ComparerFlags.IgnoreId` - comparer will not look at properties named ID, Id or id.<br />`ValueTypeComparerFactory.ComparerFlags.IgnoreKeyAttributeProperties` - comparer will not look at properties with a `[Key]` attribute.<br />Applies when comparing classes.<br />Default is `ValueTypeComparerFactory.ComparerFlags.None`.
 
 ## Example
 ```c#
