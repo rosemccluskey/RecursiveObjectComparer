@@ -18,6 +18,12 @@ namespace RecursiveObjectComparer
             Console.WriteLine($"Compare Person one to Person Two: {hedy.CompareTo(mae)}");
             Console.WriteLine($"Compare Person two to Person one: {mae.CompareTo(hedy)}");
 
+            person1.Id = 3;
+            person2.Id = 4;
+
+            Console.WriteLine($"Compare person {person1.Id} to person {person2.Id}, ignore id: {person1.CompareTo(person2, comparerFlags:ValueTypeComparerFactory.ComparerFlags.IgnoreId)}");
+            Console.WriteLine($"Compare person {person1.Id} to person {person2.Id}, ignore key: {person1.CompareTo(person2, comparerFlags: ValueTypeComparerFactory.ComparerFlags.IgnoreKeyAttributeProperties)}");
+
             Console.ReadLine();
         }
     }
