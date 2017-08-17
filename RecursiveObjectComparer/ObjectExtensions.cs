@@ -1,18 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
 namespace RecursiveObjectComparerTool
 {
     public static class ObjectExtensions
     {
-        public static int CompareTo(this object thisObject, object otherObject)
+        public static int CompareTo(this object thisObject, object otherObject, BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.Instance, ValueTypeComparerFactory.ComparerFlags flags=ValueTypeComparerFactory.ComparerFlags.None)
         {
             if (thisObject.GetType() != otherObject.GetType())
                 throw new ArgumentException("Types do not match, compare fails.");
 
             var comparer = ValueTypeComparerFactory.GetInstance(thisObject.GetType());
-            return comparer.Compare(thisObject, otherObject);
+            return comparer.Compare(thisObject, otherObject, bindingFlags, flags);
         }
 
         public static bool ImplementsIEnumerableAndIsNotAString(this Type t)

@@ -1,5 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Reflection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RecursiveObjectComparerTool;
 using RecursiveObjectComparerTool.Models;
@@ -144,6 +147,51 @@ namespace UnitTests
         }
 
         [TestMethod]
+        public void CanIgnoreIdAttributes()
+        {
+            var t1 = new TestObject();
+            var t2 = new TestObject {Id = 9999};
+
+            var result = t1.CompareTo(t2, flags:ValueTypeComparerFactory.ComparerFlags.IgnoreId);
+
+            Assert.AreEqual(0, result);
+        }
+
+        [TestMethod]
+        public void CanIgnoreKeyAttributes()
+        {
+            var t1 = new TestObject();
+            var t2 = new TestObject { S = "something else" };
+
+            var result = t1.CompareTo(t2, flags:ValueTypeComparerFactory.ComparerFlags.IgnoreKeyAttributeProperties);
+
+            Assert.AreEqual(0, result);
+        }
+
+        [TestMethod]
+        public void CanIgnoreKeyAndIdAttributes()
+        {
+            var t1 = new TestObject();
+            var t2 = new TestObject { Id = 9999, S="something else" };
+
+            var result = t1.CompareTo(t2, flags: ValueTypeComparerFactory.ComparerFlags.IgnoreKeyAttributeProperties | ValueTypeComparerFactory.ComparerFlags.IgnoreId);
+
+            Assert.AreEqual(0, result);
+
+        }
+
+        [TestMethod]
+        public void CanSetBindingFlags()
+        {
+            var t1 = new TestObject();
+            var t2 = new TestObject();
+
+            var result = t1.CompareTo(t2, BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic);
+
+            Assert.AreNotEqual(0, result);
+        }
+
+        [TestMethod]
         public void ValueTypeTestReturnsZeroWhenMatches()
         {
             var address = new Address
@@ -279,6 +327,8 @@ namespace UnitTests
             S = "Hello";
             T = new InternalTestObject();
             T2 = new InternalTestObject();
+            var random = new Random();
+            PrivateInt = random.Next();
         }
 
         public TestObject(int i, string s, object o, InternalTestObject o2)
@@ -289,9 +339,15 @@ namespace UnitTests
             T2 = o2;
         }
 
+        private int PrivateInt { get; }
+
         public int Id { get; set; }
+
+        [Key]
         public string S { get; set; }
+
         public object T { get; set; }
+
         public InternalTestObject T2 { get; set; }
     }
 

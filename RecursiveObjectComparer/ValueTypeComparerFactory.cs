@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Globalization;
+using System.Linq;
 using System.Reflection;
 
 namespace RecursiveObjectComparerTool
@@ -27,6 +30,14 @@ namespace RecursiveObjectComparerTool
             {typeof(IList), new ListComparer()},
             {typeof(object), new ObjectComparer()}
         };
+
+        [Flags]
+        public enum ComparerFlags
+        {
+            None = 0,
+            IgnoreId = 2,
+            IgnoreKeyAttributeProperties = 4
+        }
 
         public static ValueTypeComparerFactory GetInstance(Type t)
         {
@@ -72,12 +83,12 @@ namespace RecursiveObjectComparerTool
             return null;
         }
 
-        public abstract int Compare(object thisObject, object thatObject);
+        public abstract int Compare(object thisObject, object thatObject, BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.Instance, ComparerFlags flags = ComparerFlags.None);
     }
 
     public class BoolComparer : ValueTypeComparerFactory
     {
-        public override int Compare(object thisObject, object thatObject)
+        public override int Compare(object thisObject, object thatObject, BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.Instance, ComparerFlags flags = ComparerFlags.None)
         {
             if (NullTest(thisObject, thatObject).HasValue)
                 return Convert.ToInt32(NullTest(thisObject, thatObject));
@@ -93,7 +104,7 @@ namespace RecursiveObjectComparerTool
 
     public class NumericComparer : ValueTypeComparerFactory
     {
-        public override int Compare(object thisObject, object thatObject)
+        public override int Compare(object thisObject, object thatObject, BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.Instance, ComparerFlags flags = ComparerFlags.None)
         {
             if (NullTest(thisObject, thatObject).HasValue)
                 return Convert.ToInt32(NullTest(thisObject, thatObject));
@@ -109,7 +120,7 @@ namespace RecursiveObjectComparerTool
 
     public class AlphaComparer : ValueTypeComparerFactory
     {
-        public override int Compare(object thisObject, object thatObject)
+        public override int Compare(object thisObject, object thatObject, BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.Instance, ComparerFlags flags = ComparerFlags.None)
         {
             if (NullTest(thisObject, thatObject).HasValue)
                 return Convert.ToInt32(NullTest(thisObject, thatObject));
@@ -134,7 +145,7 @@ namespace RecursiveObjectComparerTool
 
     public class EnumComparer : ValueTypeComparerFactory
     {
-        public override int Compare(object thisObject, object thatObject)
+        public override int Compare(object thisObject, object thatObject, BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.Instance, ComparerFlags flags = ComparerFlags.None)
         {
             if (NullTest(thisObject, thatObject).HasValue)
                 return Convert.ToInt32(NullTest(thisObject, thatObject));
@@ -154,7 +165,7 @@ namespace RecursiveObjectComparerTool
     /// </summary>
     public class ObjectComparer : ValueTypeComparerFactory
     {
-        public override int Compare(object thisObject, object thatObject)
+        public override int Compare(object thisObject, object thatObject, BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.Instance, ComparerFlags flags = ComparerFlags.None)
         {
             if (NullTest(thisObject, thatObject).HasValue)
                 return Convert.ToInt32(NullTest(thisObject, thatObject));
@@ -165,7 +176,7 @@ namespace RecursiveObjectComparerTool
             if (!thisObject.GetType().IsClass || !thatObject.GetType().IsClass)
                 throw new ApplicationException($"Object comparer expects classes not {thisObject.GetType().Name}");
 
-            var properties = thisObject.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
+            var properties = FilterProperties(thisObject.GetType().GetProperties(bindingFlags), flags);
 
             foreach (var property in properties)
             {
@@ -194,11 +205,41 @@ namespace RecursiveObjectComparerTool
 
             return 0;
         }
+
+        private List<PropertyInfo> FilterProperties(PropertyInfo[] propInfo, ComparerFlags flags)
+        {
+            if (propInfo == null || flags == ComparerFlags.None)
+                return propInfo?.ToList();
+
+            var _return = propInfo.ToList();
+            _return.RemoveAll(FlaggedProperty);
+
+            return _return;
+
+            bool FlaggedProperty(PropertyInfo p)
+            {
+                if (flags.HasFlag(ComparerFlags.IgnoreId))
+                {
+                    if (p.Name.ToLower() == "id")
+                        return true;
+                }
+
+                if (flags.HasFlag(ComparerFlags.IgnoreKeyAttributeProperties))
+                {
+                    if (p.GetCustomAttributes(true).All(attr => attr.GetType().Name == nameof(KeyAttribute)))
+                        return true;
+                }
+
+                return false;
+            }
+
+        }
+
     }
 
     public class ListComparer : ValueTypeComparerFactory
     {
-        public override int Compare(object thisObject, object thatObject)
+        public override int Compare(object thisObject, object thatObject, BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.Instance, ComparerFlags flags = ComparerFlags.None)
         {
             var nullTest = NullTest(thisObject, thatObject);
             if (nullTest.HasValue)
