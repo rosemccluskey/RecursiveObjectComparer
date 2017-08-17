@@ -33,7 +33,8 @@ class Program
     }
 ```
 
-`Output:`
-`Compare person one to person two: 0`
-`Compare person one to person two: -5`
-`Compare person two to person one: 5`
+```Output:
+Compare person one to person two: 0
+Compare person one to person two: -5
+Compare person two to person one: 5
+```
