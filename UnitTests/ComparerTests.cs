@@ -152,7 +152,7 @@ namespace UnitTests
             var t1 = new TestObject();
             var t2 = new TestObject {Id = 9999};
 
-            var result = t1.CompareTo(t2, flags:ValueTypeComparerFactory.ComparerFlags.IgnoreId);
+            var result = t1.CompareTo(t2, comparerFlags: ValueTypeComparerFactory.ComparerFlags.IgnoreId);
 
             Assert.AreEqual(0, result);
         }
@@ -163,7 +163,7 @@ namespace UnitTests
             var t1 = new TestObject();
             var t2 = new TestObject { S = "something else" };
 
-            var result = t1.CompareTo(t2, flags:ValueTypeComparerFactory.ComparerFlags.IgnoreKeyAttributeProperties);
+            var result = t1.CompareTo(t2, comparerFlags:ValueTypeComparerFactory.ComparerFlags.IgnoreKeyAttributeProperties);
 
             Assert.AreEqual(0, result);
         }
@@ -174,7 +174,7 @@ namespace UnitTests
             var t1 = new TestObject();
             var t2 = new TestObject { Id = 9999, S="something else" };
 
-            var result = t1.CompareTo(t2, flags: ValueTypeComparerFactory.ComparerFlags.IgnoreKeyAttributeProperties | ValueTypeComparerFactory.ComparerFlags.IgnoreId);
+            var result = t1.CompareTo(t2, comparerFlags: ValueTypeComparerFactory.ComparerFlags.IgnoreKeyAttributeProperties | ValueTypeComparerFactory.ComparerFlags.IgnoreId);
 
             Assert.AreEqual(0, result);
 
