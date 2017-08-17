@@ -4,8 +4,8 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using RecursiveObjectComparerTool;
-using RecursiveObjectComparerTool.Models;
+using RecursiveObjectComparer.Models;
+using RecursiveObjectComparer;
 
 namespace UnitTests
 {

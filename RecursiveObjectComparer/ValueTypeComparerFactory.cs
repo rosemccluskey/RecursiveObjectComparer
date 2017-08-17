@@ -2,11 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Globalization;
 using System.Linq;
 using System.Reflection;
 
-namespace RecursiveObjectComparerTool
+namespace RecursiveObjectComparer
 {
     public abstract class ValueTypeComparerFactory
     {
