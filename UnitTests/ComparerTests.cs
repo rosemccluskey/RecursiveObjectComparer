@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Net.Sockets;
 using System.Reflection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RecursiveObjectComparer.Models;
@@ -31,6 +32,129 @@ namespace UnitTests
             Assert.AreEqual(0, "one".CompareTo("one"), typeof(string).Name);
             Assert.AreEqual(0, ContactMethods.Email.CompareTo(ContactMethods.Email), ContactMethods.Email.GetType().Name);
             Assert.AreEqual(0, new TestObject().CompareTo(new TestObject()), typeof(TestObject).Name);
+        }
+
+        [TestMethod]
+        public void BasicEqualityTestsWithNullables()
+        {
+            bool? b = true;
+            Assert.AreEqual(0, b.CompareTo(b), b.GetType().Name);
+
+            byte? by = byte.MinValue;
+            Assert.AreEqual(0, by.CompareTo(by), by.GetType().Name);
+
+            sbyte? sb = sbyte.MinValue;
+            Assert.AreEqual(0, sb.CompareTo(sb), sb.GetType().Name);
+
+            char? c = Char.MinValue;
+            Assert.AreEqual(0, c.CompareTo(c), c.GetType().Name);
+
+            double? d = double.MinValue;
+            Assert.AreEqual(0, d.CompareTo(d), d.GetType().Name);
+
+            float? f = float.MinValue;
+            Assert.AreEqual(0, f.CompareTo(f), f.GetType().Name);
+
+            int? i = int.MinValue;
+            Assert.AreEqual(0, i.CompareTo(i), i.GetType().Name);
+
+            uint? ui = uint.MinValue;
+            Assert.AreEqual(0, ui.CompareTo(ui), ui.GetType().Name);
+
+            long? l = long.MinValue;
+            Assert.AreEqual(0, l.CompareTo(l), l.GetType().Name);
+
+            ulong? ul = ulong.MinValue;
+            Assert.AreEqual(0, ul.CompareTo(ul), ul.GetType().Name);
+
+            short? s = short.MinValue;
+            Assert.AreEqual(0, s.CompareTo(s), s.GetType().Name);
+
+            ushort? us = ushort.MinValue;
+            Assert.AreEqual(0, us.CompareTo(us), us.GetType().Name);
+
+            ContactMethods? e = ContactMethods.Facebook;
+            Assert.AreEqual(0, e.CompareTo(e), e.GetType().Name);
+
+            decimal? dec = Decimal.MinValue;
+            Assert.AreEqual(0, dec.CompareTo(dec), dec.GetType().Name);
+
+        }
+
+        [TestMethod]
+        public void DateTimeEqualityTest()
+        {
+            DateTime? dt1 = DateTime.Now;
+            DateTime? dt2 = new DateTime(dt1.Value.Ticks, dt1.Value.Kind);
+
+            Assert.AreEqual(0, dt1.CompareTo(dt2));
+        }
+
+        [TestMethod]
+        public void DateTimeInequalityTest()
+        {
+            var dt1 = DateTime.Now;
+            var dt2 = DateTime.Now.AddDays(1);
+
+            Assert.IsTrue(dt1.CompareTo(dt2) != 0);
+        }
+
+        [TestMethod]
+        public void DateTimeNullableTest()
+        {
+            DateTime? dt1 = DateTime.Now;
+            DateTime? dt2 = new DateTime(dt1.Value.Ticks, dt1.Value.Kind);
+
+            Assert.AreEqual(0, dt1.CompareTo(dt2));
+
+            dt2 = null;
+            Assert.IsTrue(dt1.CompareTo(dt2) != 0);
+        }
+
+        [TestMethod]
+        public void BasicEqualityTestsWithNulls()
+        {
+            bool? b = null;
+            Assert.AreEqual(0, b.CompareTo(b), typeof(bool?).Name);
+
+            byte? by = null;
+            Assert.AreEqual(0, by.CompareTo(by), typeof(byte?).Name);
+
+            sbyte? sb = null;
+            Assert.AreEqual(0, sb.CompareTo(sb), typeof(sbyte?).Name);
+
+            char? c = null;
+            Assert.AreEqual(0, c.CompareTo(c), typeof(char?).Name);
+
+            double? d = null;
+            Assert.AreEqual(0, d.CompareTo(d), typeof(double?).Name);
+
+            float? f = null;
+            Assert.AreEqual(0, f.CompareTo(f), typeof(float?).Name);
+
+            int? i = null;
+            Assert.AreEqual(0, i.CompareTo(i), typeof(int?).Name);
+
+            uint? ui = null;
+            Assert.AreEqual(0, ui.CompareTo(ui), typeof(uint?).Name);
+
+            long? l = null;
+            Assert.AreEqual(0, l.CompareTo(l), typeof(long?).Name);
+
+            ulong? ul = null;
+            Assert.AreEqual(0, ul.CompareTo(ul), typeof(ulong?).Name);
+
+            short? s = null;
+            Assert.AreEqual(0, s.CompareTo(s), typeof(short?).Name);
+
+            ushort? us = null;
+            Assert.AreEqual(0, us.CompareTo(us), typeof(ushort?).Name);
+
+            ContactMethods? e = null;
+            Assert.AreEqual(0, e.CompareTo(e), typeof(ContactMethods?).Name);
+
+            decimal? dec = null;
+            Assert.AreEqual(0, dec.CompareTo(dec), typeof(decimal?).Name);
         }
 
         [TestMethod]

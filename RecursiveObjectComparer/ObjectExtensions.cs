@@ -9,6 +9,10 @@ namespace RecursiveObjectComparer
     {
         public static int CompareTo(this object thisObject, object otherObject, BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.Instance, ValueTypeComparerFactory.ComparerFlags comparerFlags = ValueTypeComparerFactory.ComparerFlags.None)
         {
+            var nullTest = ValueTypeComparerFactory.NullTest(thisObject, otherObject);
+            if (nullTest.HasValue)
+                return nullTest.Value;
+
             if (thisObject.GetType() != otherObject.GetType())
                 throw new ArgumentException("Types do not match, compare fails.");
 

@@ -25,6 +25,7 @@ namespace RecursiveObjectComparer
             {typeof(short), new NumericComparer()},
             {typeof(ushort), new NumericComparer()},
             {typeof(string), new AlphaComparer()},
+            {typeof(DateTime), new DateTimeComparer()},
             {typeof(Enum), new EnumComparer()},
             {typeof(IList), new ListComparer()},
             {typeof(object), new ObjectComparer()}
@@ -139,6 +140,26 @@ namespace RecursiveObjectComparer
             }
 
             throw new ArgumentException("String type or char type is required.");
+        }
+    }
+
+    // okay, not a value type. But whatever.
+    public class DateTimeComparer : ValueTypeComparerFactory
+    {
+        public override int Compare(object thisObject, object thatObject,
+            BindingFlags bindingFlags = BindingFlags.Default | BindingFlags.Instance | BindingFlags.Public,
+            ComparerFlags flags = ComparerFlags.None)
+        {
+            if (NullTest(thisObject, thatObject).HasValue)
+                return Convert.ToInt32(NullTest(thisObject, thatObject));
+
+            if (!(thisObject is DateTime) || !(thatObject is DateTime))
+                throw new ArgumentException($"DateTime expected. Can not compare types {thisObject.GetType().FullName} to {thatObject.GetType().FullName}");
+
+            var d1 = Convert.ToDateTime(thisObject);
+            var d2 = Convert.ToDateTime(thatObject);
+
+            return d1.CompareTo(d2);
         }
     }
 
