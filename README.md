@@ -13,17 +13,19 @@ This is a recursive comparer. When it receives an object containing complex prop
 Note: when comparing lists, order matters. `{1, 2, 3}` does not match `{1, 3, 2}`.
 
 **Usage:**
-`object.CompareTo(object otherObject, BindingFlags bindingFlags, ValueTypeComparerFactory.ComparerFlags comparerFlags)`
+```c#
+object.CompareTo(object otherObject, BindingFlags bindingFlags, ValueTypeComparerFactory.ComparerFlags comparerFlags)
+```
 
 Value | Condition
 --- | ---
 object | any type derived from object
 otherObject | any type derived from object; same type as `object`
-bindingFlags | OPTIONAL. Refer to [BindingFlags](https://msdn.microsoft.com/en-us/library/system.reflection.bindingflags(v=vs.110).aspx) documentation. Applies when comparing classes. Default is `BindingFlags.Public | BindingFlags.Instance`.
-comparerFlags | OPTIONAL. `ValueTypeComparerFactory.ComparerFlags.IgnoreId` - comparer will not look at properties named ID, Id or id. `ValueTypeComparerFactory.ComparerFlags.IgnoreKeyAttributeProperties` - comparer will not look at properties with a `[Key]` attribute.  Applies when comparing classes. Default is `ValueTypeComparerFactory.ComparerFlags.None`.
+bindingFlags | OPTIONAL.<br/>Refer to [BindingFlags](https://msdn.microsoft.com/en-us/library/system.reflection.bindingflags(v=vs.110).aspx) documentation. Applies when comparing classes.<br />Default is `BindingFlags.Public` &#124; `BindingFlags.Instance`
+comparerFlags | OPTIONAL.<br />`ValueTypeComparerFactory.ComparerFlags.IgnoreId` - comparer will not look at properties named ID, Id or id.<br />`ValueTypeComparerFactory.ComparerFlags.IgnoreKeyAttributeProperties` - comparer will not look at properties with a `[Key]` attribute.<br />Applies when comparing classes.<br />Default is `ValueTypeComparerFactory.ComparerFlags.None`.
 
 ## Example
-```
+```c#
 class Program
     {
         static void Main()
