@@ -159,6 +159,10 @@ namespace RecursiveObjectComparer
             var d1 = Convert.ToDateTime(thisObject);
             var d2 = Convert.ToDateTime(thatObject);
 
+            // disregard milliseconds/ticks comparison
+            d1 = new DateTime(d1.Year, d1.Month, d1.Day, d1.Hour, d1.Minute, d1.Second);
+            d2 = new DateTime(d2.Year, d2.Month, d2.Day, d2.Hour, d2.Minute, d2.Second);
+
             return d1.CompareTo(d2);
         }
     }
