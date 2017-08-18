@@ -316,6 +316,16 @@ namespace UnitTests
         }
 
         [TestMethod]
+        public void ObjectCompareDoesNotExitWhenPropertiesAreNull()
+        {
+            // test to verify fix. When comparing classes, if one property was null on both models, returned 0 (equal), even if other properties were not equal.
+            var obj1 = new TestObject{S = null};
+            var obj2 = new TestObject{S = null, T = new InternalTestObject(ContactMethods.Twitter, 't')};
+
+            Assert.IsTrue(obj1.CompareTo(obj2) != 0);
+        }
+
+        [TestMethod]
         public void ValueTypeTestReturnsZeroWhenMatches()
         {
             var address = new Address

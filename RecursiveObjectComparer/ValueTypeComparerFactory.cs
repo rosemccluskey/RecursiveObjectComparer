@@ -203,8 +203,12 @@ namespace RecursiveObjectComparer
                 var thisValue = property.GetValue(thisObject);
                 var otherValue = property.GetValue(thatObject);
 
-                if (NullTest(thisValue, otherValue).HasValue)
-                    return Convert.ToInt32(NullTest(thisObject, thatObject));
+                var nullTest = NullTest(thisValue, otherValue);
+                if (nullTest == 0)
+                    continue;
+
+                if (nullTest.HasValue)
+                    return Convert.ToInt32(nullTest);
 
                 ValueTypeComparerFactory comparer;
                 try
