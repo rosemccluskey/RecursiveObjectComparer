@@ -44,6 +44,11 @@ namespace RecursiveObjectComparer
 
         public static ValueTypeComparerFactory GetInstance(Type t)
         {
+            if (ComparerTypesDictionary.ContainsKey(t))
+            {
+                return ComparerTypesDictionary[t];
+            }
+
             if (t.BaseType == typeof(Enum))
             {
                 return ComparerTypesDictionary[typeof(Enum)];
@@ -64,11 +69,7 @@ namespace RecursiveObjectComparer
                 return ComparerTypesDictionary[typeof(object)];
             }
 
-            if (!ComparerTypesDictionary.ContainsKey(t))
-                throw new ArgumentOutOfRangeException($"Tracker doesn't know how to create a comparer factory for type {t.Name}");
-
-            return ComparerTypesDictionary[t];
-
+            throw new ArgumentOutOfRangeException($"Tracker doesn't know how to create a comparer factory for type {t.Name}");
         }
 
         /// <summary>
@@ -260,7 +261,7 @@ namespace RecursiveObjectComparer
                 ValueTypeComparerFactory comparer;
                 try
                 {
-                    comparer = GetInstance(thisValue.GetType());
+                    comparer = GetInstance(property.PropertyType);
                 }
                 catch (ArgumentOutOfRangeException)
                 {

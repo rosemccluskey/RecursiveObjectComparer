@@ -175,7 +175,7 @@ namespace UnitTests
             Assert.IsTrue("one".CompareTo("two") < 0, typeof(string).Name);
             Assert.IsTrue(ContactMethods.Unknown.CompareTo(ContactMethods.Email) < 0, ContactMethods.Email.GetType().Name);
 
-            var t1 = new TestObject(6, "beluga", new List<string>(), new InternalTestObject(ContactMethods.Email, 'Q'));
+            var t1 = new TestObject(6, "beluga", new List<string>(), new InternalTestObject(ContactMethods.Email, 'Q'), Guid.NewGuid());
             Assert.IsTrue(t1.CompareTo(new TestObject()) > 0, typeof(TestObject).Name);
         }
 
@@ -257,8 +257,8 @@ namespace UnitTests
 
             Assert.AreEqual(-1, d1.CompareTo(d2), d1.GetType().Name);
 
-            var t1 = Enumerable.Repeat(new TestObject(0, "a", new object(), new InternalTestObject()), 5).ToList();
-            var t2 = Enumerable.Repeat(new TestObject(1, "z", new object(), new InternalTestObject()), 5).ToList();
+            var t1 = Enumerable.Repeat(new TestObject(0, "a", new object(), new InternalTestObject(), Guid.NewGuid()), 5).ToList();
+            var t2 = Enumerable.Repeat(new TestObject(1, "z", new object(), new InternalTestObject(), Guid.NewGuid()), 5).ToList();
 
             Assert.AreEqual(-1, t1.CompareTo(t2));
 
@@ -462,14 +462,16 @@ namespace UnitTests
             T2 = new InternalTestObject();
             var random = new Random();
             PrivateInt = random.Next();
+            MyGuid = new Guid();
         }
 
-        public TestObject(int i, string s, object o, InternalTestObject o2)
+        public TestObject(int i, string s, object o, InternalTestObject o2, Guid g)
         {
             Id = i;
             S = s;
             T = o;
             T2 = o2;
+            MyGuid = g;
         }
 
         private int PrivateInt { get; }
@@ -482,6 +484,10 @@ namespace UnitTests
         public object T { get; set; }
 
         public InternalTestObject T2 { get; set; }
+
+        public Guid MyGuid { get; set; }
+
+        public Type ObjectType => this.GetType();
     }
 
     public class InternalTestObject
@@ -501,5 +507,8 @@ namespace UnitTests
         public ContactMethods EnumType { get; set; }
 
         public char MyChar { get; set; }
+
+        public Type ObjectType => this.GetType();
+
     }
 }
