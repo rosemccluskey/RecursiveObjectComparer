@@ -1,12 +1,11 @@
-﻿using System;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using RecursiveObjectComparer;
+using RecursiveObjectComparer.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Net.Sockets;
 using System.Reflection;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using RecursiveObjectComparer.Models;
-using RecursiveObjectComparer;
 
 namespace UnitTests
 {

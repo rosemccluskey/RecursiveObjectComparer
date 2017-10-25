@@ -25,9 +25,12 @@ namespace RecursiveObjectComparer
             {typeof(short), new NumericComparer()},
             {typeof(ushort), new NumericComparer()},
             {typeof(string), new AlphaComparer()},
+            //{typeof(MvcHtmlString), new AlphaComparer()},
             {typeof(DateTime), new DateTimeComparer()},
             {typeof(Enum), new EnumComparer()},
             {typeof(IList), new ListComparer()},
+            {typeof(Guid), new GuidComparer()},
+            {typeof(Type), new TypeComparer()},
             {typeof(object), new ObjectComparer()}
         };
 
@@ -183,6 +186,46 @@ namespace RecursiveObjectComparer
             return o1.CompareTo(o2);
         }
     }
+
+    public class GuidComparer : ValueTypeComparerFactory
+    {
+        public override int Compare(object thisObject, object thatObject,
+            BindingFlags bindingFlags = BindingFlags.Default | BindingFlags.Instance | BindingFlags.Public,
+            ComparerFlags flags = ComparerFlags.None)
+        {
+            if (NullTest(thisObject, thatObject).HasValue)
+                return Convert.ToInt32(NullTest(thisObject, thatObject));
+
+            if (!(thisObject is Guid) || !(thatObject is Guid))
+                throw new ArgumentException($"Can not compare types {thisObject.GetType().FullName} to {thatObject.GetType().FullName}");
+
+            var g1 = (Guid)thisObject;
+            var g2 = (Guid)thatObject;
+
+            return g1.CompareTo(g2);
+        }
+    }
+
+
+    public class TypeComparer : ValueTypeComparerFactory
+    {
+        public override int Compare(object thisObject, object thatObject,
+            BindingFlags bindingFlags = BindingFlags.Default | BindingFlags.Instance | BindingFlags.Public,
+            ComparerFlags flags = ComparerFlags.None)
+        {
+            if (NullTest(thisObject, thatObject).HasValue)
+                return Convert.ToInt32(NullTest(thisObject, thatObject));
+
+            if (!(thisObject is Type) || !(thatObject is Type))
+                throw new ArgumentException($"Can not compare types {thisObject.GetType().FullName} to {thatObject.GetType().FullName}");
+
+            var t1 = (Type)thisObject;
+            var t2 = (Type)thatObject;
+
+            return t1.FullName.CompareTo(t2.FullName);
+        }
+    }
+
 
     /// <summary>
     /// This is recursive. Object.CompareTo extension uses ValueTypeComparerFactory
