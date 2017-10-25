@@ -261,7 +261,7 @@ namespace RecursiveObjectComparer
                 ValueTypeComparerFactory comparer;
                 try
                 {
-                    comparer = GetInstance(property.PropertyType);
+                    comparer = GetInstance(Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType);
                 }
                 catch (ArgumentOutOfRangeException)
                 {
