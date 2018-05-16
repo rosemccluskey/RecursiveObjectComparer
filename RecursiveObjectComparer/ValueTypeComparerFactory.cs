@@ -9,6 +9,8 @@ namespace RecursiveObjectComparer
 {
     public abstract class ValueTypeComparerFactory
     {
+        private static readonly Type RuntimeType = typeof(Type); // calling GetType on a Type returns System.RuntimeType
+
         private static readonly Dictionary<Type, ValueTypeComparerFactory> ComparerTypesDictionary = new Dictionary<Type, ValueTypeComparerFactory>
         {
             {typeof(bool), new BoolComparer()},
@@ -31,6 +33,7 @@ namespace RecursiveObjectComparer
             {typeof(IList), new ListComparer()},
             {typeof(Guid), new GuidComparer()},
             {typeof(Type), new TypeComparer()},
+            {RuntimeType, new TypeComparer()},
             {typeof(object), new ObjectComparer()}
         };
 
